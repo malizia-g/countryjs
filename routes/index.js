@@ -1,15 +1,16 @@
-var createError = require('http-errors');
+var createError = require('http-errors'); //Importo la libreria per la gestione degli errori
 var express = require('express');
 var router = express.Router();
 var country = require('countryjs');
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log("ciaone");
   res.render('index', { title: 'Express' });
 });
 
 router.get('/pages/:state/', function(req, res, next){
-  console.log(country.info(req.params.state)); 
+  //Se countryjs non trova il codice state allora ritorna una variabile undefined.
+  //In questo caso richiamiamo la funzione next che passa l'errore al gestore degli errori
+  //Il gestore degli errori è stato definito nell'app.js
   if (typeof country.info(req.params.state) === "undefined") {
     return next(createError(422, 'OOPS! State not found'));
   }
