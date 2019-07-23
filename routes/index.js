@@ -1,3 +1,4 @@
+var createError = require('http-errors');
 var express = require('express');
 var router = express.Router();
 var country = require('countryjs');
@@ -8,8 +9,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/pages/:state/', function(req, res, next){
-  console.log("ciao");
-  res.render('state', {state: country.info(req.params.state)}) ; //Rendiamo lo stato un parametro
+  console.log(country.info(req.params.state)); 
+  if (typeof country.info(req.params.state) === "undefined") {
+    return next(createError(422, 'OOPS! State not found'));
+  }
+  else
+  {
+    res.render('state', {state: country.info(req.params.state)}) ; //Rendiamo lo stato un parametro
+  }
 })
 
 module.exports = router;
